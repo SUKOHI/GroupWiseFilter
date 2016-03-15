@@ -3,7 +3,9 @@
 trait GroupWiseFilterTrait {
 
 	private $_group_wise_group_by,
-			$_group_wise_column;
+		$_group_wise_column;
+	private $_group_wise_table_name = 'GROUP_TABLE';
+	private $_group_wise_group_value = 'GROUP_VALUE';
 
 	public function scopeGroupMax($query, $column, $group_by) {
 
@@ -27,6 +29,14 @@ trait GroupWiseFilterTrait {
 
 	}
 
+	public function scopeOrderByGroup($query, $direction) {
+
+		$group_table = $this->_group_wise_table_name;
+		$group_value = $this->_group_wise_group_value;
+		return $query->orderBy(\DB::raw($group_table .'.'. $group_value), $direction);
+
+	}
+
 	private function groupWiseInit($column, $group_by) {
 
 		$this->_group_wise_column = $column;
@@ -38,10 +48,12 @@ trait GroupWiseFilterTrait {
 
 		$table = $this->getGroupTable();
 		$group_mode = strtoupper($mode);
+		$group_table = $this->_group_wise_table_name;
+		$group_value = $this->_group_wise_group_value;
 		return \DB::raw(
-			'(SELECT '. $this->_group_wise_group_by .', '. $group_mode .'('. $this->_group_wise_column .') AS GROUP_VALUE '.
+			'(SELECT '. $this->_group_wise_group_by .', '. $group_mode .'('. $this->_group_wise_column .') AS '. $group_value .' '.
 			'FROM '. $table .' '.
-			'GROUP BY '. $this->_group_wise_group_by .') AS GROUP_TABLE'
+			'GROUP BY '. $this->_group_wise_group_by .') AS '. $group_table
 		);
 
 	}
@@ -57,16 +69,17 @@ trait GroupWiseFilterTrait {
 		return function($join){
 
 			$table = $this->getGroupTable();
+			$group_table = $this->_group_wise_table_name;
+			$group_value = $this->_group_wise_group_value;
 			$join->on(
-					\DB::raw($table .'.'. $this->_group_wise_group_by),
-					'=',
-					\DB::raw('GROUP_TABLE.'. $this->_group_wise_group_by)
-				)
-				->on(
-					\DB::raw($table .'.'. $this->_group_wise_column),
-					'=',
-					\DB::raw('GROUP_TABLE.GROUP_VALUE')
-				);
+				\DB::raw($table .'.'. $this->_group_wise_group_by),
+				'=',
+				\DB::raw($group_table .'.'. $this->_group_wise_group_by)
+			)->on(
+				\DB::raw($table .'.'. $this->_group_wise_column),
+				'=',
+				\DB::raw($group_table .'.'. $group_value)
+			);
 
 		};
 

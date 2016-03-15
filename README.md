@@ -40,11 +40,16 @@ You should add table name like this.
                     'items.area_id'
                 );
                 
+**Order by Group**
+    
+    \App\Item::orderByGroup('ASC');
+    \App\Item::orderByGroup('DESC');
+             
 **Grouped table and Grouped table**
 
 You can use `GROUP_TABLE` and `GROUP_VALUE` like this.
 
-    $items = Item::select('GROUP_TABLE.GROUP_VALUE')->orderBy('GROUP_TABLE.GROUP_VALUE', 'ASC');
+    $items = Item::select('GROUP_TABLE.GROUP_VALUE');
 
 License
 ====
