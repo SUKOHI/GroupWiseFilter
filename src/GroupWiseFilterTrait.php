@@ -3,7 +3,7 @@
 trait GroupWiseFilterTrait {
 
 	private $_group_wise_group_by,
-			$_group_wise_column;
+		$_group_wise_column;
 	private $_group_wise_table_name = 'GROUP_TABLE';
 	private $_group_wise_group_value = 'GROUP_VALUE';
 
@@ -33,7 +33,7 @@ trait GroupWiseFilterTrait {
 
 		$group_table = $this->_group_wise_table_name;
 		$group_value = $this->_group_wise_group_value;
-		return $query->orderBy($group_table .'.'. $group_value, $direction);
+		return $query->orderBy(\DB::raw($group_table .'.'. $group_value), $direction);
 
 	}
 
