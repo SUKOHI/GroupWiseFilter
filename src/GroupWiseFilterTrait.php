@@ -3,7 +3,7 @@
 trait GroupWiseFilterTrait {
 
 	private $_group_wise_group_by,
-			$_group_wise_column;
+		$_group_wise_column;
 
 	public function scopeGroupMax($query, $column, $group_by) {
 
@@ -57,8 +57,15 @@ trait GroupWiseFilterTrait {
 		return function($join){
 
 			$table = $this->getGroupTable();
-			$join->on($table .'.'. $this->_group_wise_group_by, '=', 'GROUP_TABLE.'. $this->_group_wise_group_by)
-				->on($table .'.'. $this->_group_wise_column, '=', 'GROUP_TABLE.GROUP_VALUE');
+			$join->on(
+				\DB::raw($table .'.'. $this->_group_wise_group_by),
+				'=',
+				\DB::raw('GROUP_TABLE.'. $this->_group_wise_group_by)
+			)->on(
+				\DB::raw($table .'.'. $this->_group_wise_column),
+				'=',
+				\DB::raw('GROUP_TABLE.GROUP_VALUE')
+			);
 
 		};
 
