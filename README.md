@@ -42,8 +42,8 @@ You should add table name like this.
                 
 **Order by Group**
     
-    \App\Item::orderByGroup('ASC');
-    \App\Item::orderByGroup('DESC');
+    Item::orderByGroup('ASC');
+    Item::orderByGroup('DESC');
              
 **Grouped table and Grouped table**
 
